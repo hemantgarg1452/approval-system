@@ -2,7 +2,6 @@ package com.company.approval_system.controller;
 
 import com.company.approval_system.security.CustomUserDetailsService;
 import com.company.approval_system.security.JwtUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;

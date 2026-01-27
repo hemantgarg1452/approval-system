@@ -1,8 +1,10 @@
 package com.company.approval_system.security;
 
+import com.company.approval_system.config.JwtProperties;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -10,12 +12,15 @@ import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.Map;
 
+import static java.security.KeyRep.Type.SECRET;
+
 @Component
+@RequiredArgsConstructor
 public class JwtUtil {
-    private final String SECRET = "chsuchasiuhw3y383kvv3uyrg873rg78gr38rg893gr83";
+    private final JwtProperties jwtProperties;
 
     private SecretKey getSignInKey(){
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET);
+        byte[] keyBytes = Decoders.BASE64.decode(jwtProperties.getSecret());
         return Keys.hmacShaKeyFor(keyBytes);
     }
     
