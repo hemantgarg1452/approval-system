@@ -23,7 +23,13 @@ public class JwtUtil {
         byte[] keyBytes = Decoders.BASE64.decode(jwtProperties.getSecret());
         return Keys.hmacShaKeyFor(keyBytes);
     }
-    
+
+    //Simple Login Token
+    public String generateToken(UserDetails userDetails){
+        return generateToken(Map.of(), userDetails);
+    }
+
+    //Advanced Token (Custom Claims)
     public String generateToken(Map<String, Object> claims, UserDetails userDetails) {
         return Jwts
                 .builder()
