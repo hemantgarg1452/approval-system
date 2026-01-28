@@ -1,5 +1,6 @@
 package com.company.approval_system.controller;
 
+import com.company.approval_system.dto.LoginRequest;
 import com.company.approval_system.security.CustomUserDetailsService;
 import com.company.approval_system.security.JwtUtil;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -31,6 +34,13 @@ public class AuthController {
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
 
-        return jwtUtil.generateToken(userDetails);
+        Map<String, Object> claims = Map.of(
+                "roles",
+                userDetails.getAuthorities()
+                        .stream()
+                        .map(Object::toString)
+                        .toList()
+        );
+        return jwtUtil.generateToken(claims, userDetails);
     }
 }

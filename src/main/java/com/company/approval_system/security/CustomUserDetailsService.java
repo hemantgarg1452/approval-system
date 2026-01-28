@@ -1,6 +1,8 @@
 package com.company.approval_system.security;
 
 import com.company.approval_system.entity.User;
+import com.company.approval_system.repository.UserRepository;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;

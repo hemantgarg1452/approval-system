@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 @Table(name = "requests")
 public class Request {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Enumerated(EnumType.STRING)
@@ -17,6 +17,7 @@ public class Request {
     @Enumerated(EnumType.STRING)
     private RequestStatus status;
 
-    @ManyToMany
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "created_by", nullable = false)
     private User createdBy;
 }
