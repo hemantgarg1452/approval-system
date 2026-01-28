@@ -37,3 +37,7 @@ build/
 *.log
 .env
 
+# Ignore application properties (secrets)
+src/main/resources/application.properties
+
+
