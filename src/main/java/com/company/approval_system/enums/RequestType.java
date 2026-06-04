@@ -1,7 +1,6 @@
 package com.company.approval_system.enums;
-/**
- * Types of requests employees can submit
- */
+// Types of requests employees can submit
+
 public enum RequestType {
     LEAVE,      // Time off requests
     EXPENSE,    // Reimbursement requests
