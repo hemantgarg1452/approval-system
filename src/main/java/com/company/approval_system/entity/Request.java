@@ -51,32 +51,28 @@ public class Request {
     @Builder.Default
     private RequestStatus status = RequestStatus.PENDING;
 
-    /**
-     * Employee who created this request
-     */
+    // Employee who created this request
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "created_by_id", nullable = false)
     private User createdBy;
 
-    /**
-     * Manager assigned to approve this request (determined at creation time)
-     */
+    // Manager assigned to approve this request (determined at creation time)
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "approver_id", nullable = false)
     private User approver;
 
-    /**
-     * Used for LEAVE and TRAVEL requests
-     */
+    // Used for LEAVE and TRAVEL requests
+
     @Column
     private LocalDate startDate;
 
     @Column
     private LocalDate endDate;
 
-    /**
-     * Used for EXPENSE requests
-     */
+    // Used for EXPENSE requests
+
     @Column(precision = 10, scale = 2)
     private BigDecimal amount;
 
@@ -88,9 +84,8 @@ public class Request {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    /**
-     * Audit trail of approval actions
-     */
+    // Audit trail of approval actions
+
     @OneToMany(mappedBy = "request", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Builder.Default
     private List<ApprovalHistory> approvalHistory = new ArrayList<>();
