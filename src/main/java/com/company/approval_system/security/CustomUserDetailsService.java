@@ -1,8 +1,8 @@
 package com.company.approval_system.security;
 
+import com.company.approval_system.entity.User;
 import com.company.approval_system.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,12 +15,13 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
+    private final UserPrincipal userPrincipal;
 
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(()->new UsernameNotFoundException("user not found with email: "+ email));
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(()->new UsernameNotFoundException("user not found with email: "+ username));
 
         return UserPrincipal.create(user);
     }

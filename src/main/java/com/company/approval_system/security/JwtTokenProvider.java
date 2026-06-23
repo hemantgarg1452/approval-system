@@ -2,7 +2,6 @@ package com.company.approval_system.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import lombok.Lombok;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -10,15 +9,14 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.attribute.UserPrincipal;
 import java.util.Date;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
 
 // Handles JWT token auth and validation. Uses HMAC-SHA algo for signing tokens
 @Component
 public class JwtTokenProvider {
-    private static final Logger logger = (Logger) LoggerFactory.getLogger(JwtTokenProvider.class);
-
+    private static final Logger logger =
+            LoggerFactory.getLogger(JwtTokenProvider.class);
     @Value("${jwt.secret}")
     private String jwtSecret;
 
