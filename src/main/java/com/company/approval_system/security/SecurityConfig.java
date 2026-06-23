@@ -43,7 +43,7 @@ public class SecurityConfig {
 
                         //User management - ADMIN only
                         .requestMatchers(HttpMethod.POST, "/api/v1/users").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "api/v1/users/**").hasAnyRole("ADMIN", "MANAGER")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/users/**").hasAnyRole("ADMIN", "MANAGER")
 
                         //Requests - all authenticated users can create
                         .requestMatchers(HttpMethod.POST, "/api/v1/requests").hasAnyRole("EMPLOYEE", "MANAGER", "ADMIN")
@@ -72,8 +72,7 @@ public class SecurityConfig {
     //Authentication provider that uses our custom UserDetailsService and Password encoder
     @Bean
     public DaoAuthenticationProvider authenticationProvider(){
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }

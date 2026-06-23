@@ -44,15 +44,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                 null,
                                 userDetails.getAuthorities()
                         );
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 logger.debug("Set authentication for user: {}", userDetails.getUsername());
             }
         } catch(Exception ex){
             logger.error("Could not set user authentication in security context", ex);
         }
-        filterChain.doFilter((request, response));
+        filterChain.doFilter(request, response);
     }
 
     // Extract JWT token from Authorization header
