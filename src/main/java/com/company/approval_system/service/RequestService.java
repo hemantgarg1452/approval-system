@@ -15,7 +15,7 @@ import com.company.approval_system.exception.UnauthorizedException;
 import com.company.approval_system.repository.ApprovalHistoryRepository;
 import com.company.approval_system.repository.RequestRepository;
 import com.company.approval_system.repository.UserRepository;
-import com.sun.security.auth.UserPrincipal;
+import com.company.approval_system.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
