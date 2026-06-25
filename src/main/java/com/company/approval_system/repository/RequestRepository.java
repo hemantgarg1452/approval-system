@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface RequestRepository extends JpaRepository<Request, Long> {
@@ -36,4 +37,7 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
 
     // Find all requests with pagination (admin use case)
     Page<Request> findAll(Pageable pageable);
+
+//    @Query("select r from Request r join fetch r.createdBy join fetch r.approver where r.id = :id")
+//    Optional<Request> findByIdWithUsers(Long id);
 }
