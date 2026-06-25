@@ -35,6 +35,7 @@ public class RequestService {
     private final ApprovalHistoryRepository approvalHistoryRepository;
 
     //create a new request
+    @Transactional
     public RequestResponse createRequest(CreateRequestDto dto, UserPrincipal currentUser){
         logger.info("Creating request for user: {}", currentUser.getEmail());
 
