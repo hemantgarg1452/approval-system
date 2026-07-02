@@ -1,5 +1,6 @@
-package com.company.approval_system.security;
+package com.company.approval_system.config;
 
+import com.company.approval_system.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
