@@ -136,6 +136,7 @@ mvn spring-boot:run -Dspring-boot.run.profiles=dev
 # Or run the JAR directly
 java -jar target/approval-system-1.0.0.jar --spring.profiles.active=dev
 ```
+<img width="677" height="485" alt="Screenshot 2026-07-03 015039" src="https://github.com/user-attachments/assets/3b24a6d8-005a-42a8-b1e0-095652978e9c" />
 
 ---
 
@@ -146,6 +147,9 @@ Once the application is running, access Swagger UI at:
 ```
 http://localhost:8080/swagger-ui.html
 ```
+
+<img width="1919" height="965" alt="Screenshot 2026-07-03 015021" src="https://github.com/user-attachments/assets/d749909e-ccd6-41fd-9523-1181f2ebceb7" />
+
 
 ### Key Endpoints
 
