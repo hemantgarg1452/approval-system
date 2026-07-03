@@ -52,9 +52,9 @@ public class User {
     @JoinColumn(name = "manager_id")
     private User manager;
 
-    /**
-     * Employees reporting to this user (if they are a manager)
-     */
+
+    // Employees reporting to this user (if they are a manager)
+
     @OneToMany(mappedBy = "manager", fetch = FetchType.LAZY)
     @Builder.Default
     private List<User> subordinates = new ArrayList<>();
@@ -71,16 +71,15 @@ public class User {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    /**
-     * Requests created by this user
-     */
+
+    // Requests created by this user
+
     @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Builder.Default
     private List<Request> createdRequests = new ArrayList<>();
 
-    /**
-     * Requests assigned to this user for approval
-     */
+    // Requests assigned to this user for approval
+
     @OneToMany(mappedBy = "approver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Builder.Default
     private List<Request> requestsToApprove = new ArrayList<>();
