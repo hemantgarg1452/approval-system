@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: ${DB_URL:jdbc:mysql://mysql:3306/approval_system?useSSL=true&requireSSL=true}
+    url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -11,6 +11,11 @@ spring:
       idle-timeout: 600000
       max-lifetime: 1800000
       leak-detection-threshold: 60000
+
+#  sql:
+#    init:
+#      mode: always
+#      schema-locations: classpath:schema.sql
 
   jpa:
     hibernate:
@@ -31,10 +36,10 @@ logging:
     com.company.approval: INFO
     org.springframework.security: WARN
     org.hibernate: WARN
-  file:
-    name: /var/log/approval-system/application.log
-    max-size: 10MB
-    max-history: 30
+#  file:
+#    name: /var/log/approval-system/application.log
+#    max-size: 10MB
+#    max-history: 30
 
 server:
   port: 8080
@@ -46,6 +51,12 @@ server:
     enabled: true
   http2:
     enabled: true
+
+springdoc:
+  swagger-ui:
+    enabled: false
+  api-docs:
+    enabled: false
 
 # Secure actuator in production
 management:
