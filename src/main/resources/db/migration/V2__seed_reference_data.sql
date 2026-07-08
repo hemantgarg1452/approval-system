@@ -1,0 +1,19 @@
+-- V2: Seed data that is safe to commit to source control — i.e. data with
+-- no security sensitivity, not credentials.
+--
+-- Deliberately NOT included here: an initial admin user with a hardcoded
+-- password hash. Baking real login credentials into a migration file means
+-- anyone with repo access effectively knows (or can brute-force offline)
+-- the first admin password, and it's awkward to rotate since Flyway
+-- migrations are meant to be immutable once applied.
+--
+-- Better pattern for admin bootstrap: a Spring Boot CommandLineRunner that
+-- runs on startup, checks "does any ADMIN user exist?", and if not, creates
+-- one using a password read from an environment variable
+-- (e.g. APP_INITIAL_ADMIN_PASSWORD) that's rotated/removed after first login.
+-- That keeps secrets out of git entirely, which migrations should never hold.
+
+-- Example of the kind of thing that DOES belong here: static reference data.
+-- (No rows yet in this project — this file exists to show where such
+-- seed migrations go as the schema grows, e.g. a future `request_category`
+-- lookup table.)
