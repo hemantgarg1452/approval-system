@@ -96,7 +96,6 @@ User (1) ←─── (N) Request (1) ←─── (N) ApprovalHistory
 - Docker & Docker Compose (recommended)
 - MySQL 8.0 (if running without Docker)
 
-<!--
 ### Option 1: Run with Docker (Recommended)
 
 ```bash
@@ -112,9 +111,10 @@ docker-compose up --build
 # - Swagger UI: http://localhost:8080/swagger-ui.html
 # - MySQL: localhost:3307
 ```
--->
+<img width="1919" height="1021" alt="Screenshot 2026-07-08 120154" src="https://github.com/user-attachments/assets/13dab580-965b-4f55-af3a-749b64961f38" />
 
-### Option 1: Run Locally
+
+### Option 2: Run Locally
 
 ```bash
 # 1. Start MySQL
@@ -209,7 +209,7 @@ Response (201 Created):
 ```
 
 ---
-<!--
+
 ## 🧪 Testing
 
 ### Run Tests
@@ -271,24 +271,6 @@ GET /actuator/metrics     # System metrics
 - **prod** (`application-prod.yml`): Minimal logging, strict error handling, optimized connections
 
 ---
--->
-
-## 🏛️ Project Structure
-
-```
-src/main/java/com/company/approval_system/
-├── config/              # Security, Swagger, CORS configuration
-├── controller/          # REST endpoints
-├── dto/                 # Request/Response data transfer objects
-│   ├── request/
-│   └── response/
-├── entity/              # JPA entities
-├── enums/               # Role, Status, Type enumerations
-├── exception/           # Custom exceptions and global handler
-├── repository/          # Spring Data JPA repositories
-├── security/            # JWT, UserDetails, Authentication filter
-└── service/             # Business logic layer
-```
 
 ---
 
@@ -320,7 +302,7 @@ src/main/java/com/company/approval_system/
 - Employees must have a manager assigned to create requests
 
 ---
-<!--
+
 ## 🚢 Deployment
 
 ### Docker Production Deployment
@@ -339,17 +321,8 @@ docker run -d \
   approval-system:1.0.0
 ```
 
-### Database Migration
-```bash
-# First-time setup (creates tables automatically with ddl-auto=update in dev)
-# For production, use Flyway or Liquibase for versioned migrations
-
-# Manual schema creation (if needed)
-mysql -u root -p < src/main/resources/schema.sql
-```
-
 ---
--->
+
 ## 📋 Development Timeline
 
 ### Phase 1: Foundation
