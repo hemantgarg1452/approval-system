@@ -14,7 +14,7 @@ spring:
     open-in-view: false
     properties:
       hibernate:
-        ddl-auto: validate
+#        ddl-auto: validate
         format_sql: true
         use_sql_comments: true
 
