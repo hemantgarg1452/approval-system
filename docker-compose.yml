@@ -37,7 +37,7 @@ services:
       DB_URL: ${DB_URL}
       DB_USERNAME: ${MYSQL_USER}
       DB_PASSWORD: ${MYSQL_PASSWORD}
-      JWT_SECRET: ${JWT_SECRET_KEY}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
     ports:
       - "8080:8080"
     networks:
