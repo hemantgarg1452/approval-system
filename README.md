@@ -405,7 +405,7 @@ docker run -d \
 ### Performance Optimization
 - **Connection Pooling**: HikariCP with 20 max connections
 - **Indexes**: Optimized for common queries (status, approver_id)
-- **Lazy Loading**: Used for entity relationships
+- **Lazy Loading**: Used for entity relationship
 - **Pagination**: All list endpoints support pagination
 
 ---
