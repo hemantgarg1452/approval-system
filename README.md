@@ -39,6 +39,15 @@ Client (Web/Mobile) → Security Filter (JWT) → Controller → Service → Rep
 | Containerization | Docker + Docker Compose |
 
 ---
+## 🚀 Deployment
+The application is deployed on Railway using Docker with a managed MySQL database.
+```
+https://approval-system-production-0267.up.railway.app
+```
+
+<img width="939" height="553" alt="Screenshot 2026-07-18 091846" src="https://github.com/user-attachments/assets/7d8402fa-5f87-4346-9eb2-6601122f7977" />
+
+<img width="1555" height="958" alt="Screenshot 2026-07-18 093125" src="https://github.com/user-attachments/assets/aa0dfe94-b36c-4c30-89a0-5166962aeb58" />
 
 ## 📊 Database Schema
 
