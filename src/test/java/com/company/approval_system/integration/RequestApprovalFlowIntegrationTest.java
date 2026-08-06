@@ -6,24 +6,24 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.mysql.MySQLContainer;
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.JsonNode;
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import javax.management.ObjectName;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @Testcontainers
+@ActiveProfiles("test")
 public class RequestApprovalFlowIntegrationTest {
 
     @Container
@@ -33,8 +33,7 @@ public class RequestApprovalFlowIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     private long registerUser(String email, String password, String fullName,
                               String role, Long managerId) throws Exception{
@@ -97,7 +96,7 @@ public class RequestApprovalFlowIntegrationTest {
     void employeeCanCreateRequestAndManagerCanApproveIt() throws Exception{
         long managerId = registerUser(
                 "manager.happy@integrationtest.com", "ManagerPass123",
-                "Happy Path Manager", "Manager", null);
+                "Happy Path Manager", "MANAGER", null);
         String managerToken = login("manager.happy@integrationtest.com","ManagerPass123");
 
         registerUser(
@@ -110,8 +109,80 @@ public class RequestApprovalFlowIntegrationTest {
         mockMvc.perform(put("/api/v1/requests/{id}/approve", requestId)
                 .header("Authorization", "Bearer "+ managerToken)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"comments\": \"Approved by integration test\"}"))
+                .content("""
+                        {
+                            "action":"APPROVED",
+                            "comments":"Approved by integration test"
+                        }
+                """))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("APPROVED"));
+    }
+
+    //Negative Test - RBAC. (6a)
+    @Test
+    void employeeCannotApproveRequest() throws Exception{
+        long managerId = registerUser(
+                "manager.rbac@integrationtest.com", "ManagerPass123",
+                "RBAC Manager", "MANAGER",null);
+
+        registerUser(
+                "employee.rbac@integrationtest.com", "EmployeePass123",
+                "RBAC Employee", "EMPLOYEE", managerId);
+        String employeeToken = login("employee.rbac@integrationtest.com", "EmployeePass123");
+
+        long requestId = createLeaveRequest(employeeToken);
+
+        mockMvc.perform(put("/api/v1/requests/{id}/approve", requestId)
+                .header("Authorization", "Bearer " + employeeToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"comments\": \"trying to self-approve\"}"))
+                .andExpect(status().isForbidden());
+    }
+
+    //Negative Test - Business rule enforcement. (6b)
+    @Test
+    void managerCannotApproveSameRequestTwice() throws Exception{
+        long managerId = registerUser(
+                "manager.double@integrationtest.com","ManagerPass123",
+                "Double Approve Manager","MANAGER", null);
+        String managerToken = login("manager.double@integrationtest.com","ManagerPass123");
+
+        registerUser(
+                "employee.double@integrationtest.com", "EmployeePass123",
+                "Double Approve Employee", "EMPLOYEE", managerId);
+        String employeeToken = login("employee.double@integrationtest.com", "EmployeePass123");
+
+        long requestId = createLeaveRequest(employeeToken);
+
+        mockMvc.perform(put("/api/v1/requests/{id}/approve", requestId)
+                .header("Authorization", "Bearer " + managerToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {
+                            "action": "APPROVED",
+                            "comments": "first approval"
+                        }
+                """))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(put("/api/v1/requests/{id}/approve", requestId)
+                .header("Authorization", "Bearer " + managerToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {
+                            "action": "APPROVED",
+                            "comments": "second approval attempt"
+                        }
+                """))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    //Negative Test - no token at all.
+    @Test
+    void cannotAccessRequestWithoutToken() throws Exception{
+        mockMvc.perform(get("/api/v1/requests/my-requests"))
+                .andExpect(status().isForbidden());
     }
 }
