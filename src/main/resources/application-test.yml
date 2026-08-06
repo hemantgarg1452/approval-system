@@ -1,0 +1,3 @@
+jwt:
+  secret: jknduqhqhh8319gdhg9382by23cry28yr02yr92trb8rt671xrt1800
+  expiration: 86400000
