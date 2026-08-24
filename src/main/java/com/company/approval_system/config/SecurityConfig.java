@@ -1,5 +1,7 @@
 package com.company.approval_system.config;
 
+import com.company.approval_system.security.CustomAccessDeniedHandler;
+import com.company.approval_system.security.JwtAuthenticationEntryPoint;
 import com.company.approval_system.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -28,6 +30,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final UserDetailsService userDetailsService;
+    private final JwtAuthenticationEntryPoint authenticationEntryPoint;
+    private final CustomAccessDeniedHandler accessDeniedHandler;
 
     //Configure HTTP security - defines which endpoints are public and which require authentication
     @Bean
@@ -36,6 +40,12 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)     //Disable CSRF for stateless JWT authentication
                 .sessionManagement(session->session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //No server-side sessions
+
+                .exceptionHandling(ex->ex
+                        .authenticationEntryPoint(authenticationEntryPoint) //401
+                        .accessDeniedHandler(accessDeniedHandler) //403
+                )
+
                 .authorizeHttpRequests(auth -> auth
                         //Public endpoints
                         .requestMatchers("/api/v1/auth/**").permitAll()

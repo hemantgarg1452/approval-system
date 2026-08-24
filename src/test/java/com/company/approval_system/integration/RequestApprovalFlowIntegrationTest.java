@@ -1,5 +1,6 @@
 package com.company.approval_system.integration;
 
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,8 +12,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.mysql.MySQLContainer;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -183,6 +184,7 @@ public class RequestApprovalFlowIntegrationTest {
     @Test
     void cannotAccessRequestWithoutToken() throws Exception{
         mockMvc.perform(get("/api/v1/requests/my-requests"))
-                .andExpect(status().isForbidden());
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
     }
 }
