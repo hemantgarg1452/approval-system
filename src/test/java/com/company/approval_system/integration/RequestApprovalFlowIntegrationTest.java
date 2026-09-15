@@ -36,8 +36,8 @@ public class RequestApprovalFlowIntegrationTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private long registerUser(String email, String password, String fullName,
-                              String role, Long managerId) throws Exception{
+    private long createUserAsAdmin(String email, String password, String fullName,
+                              String role, Long managerId, String adminToken) throws Exception{
         ObjectNode body = objectMapper.createObjectNode()
                 .put("email", email)
                 .put("password", password)
@@ -47,13 +47,14 @@ public class RequestApprovalFlowIntegrationTest {
             body.put("managerId", managerId);
         }
 
-        String response = mockMvc.perform(post("/api/v1/auth/register")
+        String response = mockMvc.perform(post("/api/v1/users")
+                .header("Authorization", "Bearer "+ adminToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body.toString()))
                 .andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString();
 
-        return objectMapper.readTree(response).get("userId").asLong();
+        return objectMapper.readTree(response).get("id").asLong();
     }
 
     private String login(String email, String password) throws Exception{
@@ -95,14 +96,15 @@ public class RequestApprovalFlowIntegrationTest {
     //automated testing of request flow.
     @Test
     void employeeCanCreateRequestAndManagerCanApproveIt() throws Exception{
-        long managerId = registerUser(
+        String adminToken = login("admin@test.com", "AdminPass123");
+        long managerId = createUserAsAdmin(
                 "manager.happy@integrationtest.com", "ManagerPass123",
-                "Happy Path Manager", "MANAGER", null);
+                "Happy Path Manager", "MANAGER", null, adminToken);
         String managerToken = login("manager.happy@integrationtest.com","ManagerPass123");
 
-        registerUser(
+        createUserAsAdmin(
                 "employee.happy@integrationtest.com","EmployeePass123",
-                "Happy Path Employee", "EMPLOYEE", managerId);
+                "Happy Path Employee", "EMPLOYEE", managerId, adminToken);
         String employeeToken = login("employee.happy@integrationtest.com", "EmployeePass123");
 
         long requestId = createLeaveRequest(employeeToken);
@@ -123,13 +125,14 @@ public class RequestApprovalFlowIntegrationTest {
     //Negative Test - RBAC. (6a)
     @Test
     void employeeCannotApproveRequest() throws Exception{
-        long managerId = registerUser(
+        String adminToken = login("admin@test.com", "AdminPass123");
+        long managerId = createUserAsAdmin(
                 "manager.rbac@integrationtest.com", "ManagerPass123",
-                "RBAC Manager", "MANAGER",null);
+                "RBAC Manager", "MANAGER",null, adminToken);
 
-        registerUser(
+        createUserAsAdmin(
                 "employee.rbac@integrationtest.com", "EmployeePass123",
-                "RBAC Employee", "EMPLOYEE", managerId);
+                "RBAC Employee", "EMPLOYEE", managerId, adminToken);
         String employeeToken = login("employee.rbac@integrationtest.com", "EmployeePass123");
 
         long requestId = createLeaveRequest(employeeToken);
@@ -144,14 +147,15 @@ public class RequestApprovalFlowIntegrationTest {
     //Negative Test - Business rule enforcement. (6b)
     @Test
     void managerCannotApproveSameRequestTwice() throws Exception{
-        long managerId = registerUser(
+        String adminToken = login("admin@test.com", "AdminPass123");
+        long managerId = createUserAsAdmin(
                 "manager.double@integrationtest.com","ManagerPass123",
-                "Double Approve Manager","MANAGER", null);
+                "Double Approve Manager","MANAGER", null, adminToken);
         String managerToken = login("manager.double@integrationtest.com","ManagerPass123");
 
-        registerUser(
+        createUserAsAdmin(
                 "employee.double@integrationtest.com", "EmployeePass123",
-                "Double Approve Employee", "EMPLOYEE", managerId);
+                "Double Approve Employee", "EMPLOYEE", managerId, adminToken);
         String employeeToken = login("employee.double@integrationtest.com", "EmployeePass123");
 
         long requestId = createLeaveRequest(employeeToken);

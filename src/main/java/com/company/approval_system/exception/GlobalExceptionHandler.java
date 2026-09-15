@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
@@ -46,17 +47,18 @@ public class GlobalExceptionHandler {
     }
 
     //Handle resource not found(404)
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ApiErrorResponse> handleResourceNotFound(
-            ResourceNotFoundException ex,
-            WebRequest request){
-        logger.warn("Resource not found: {}", ex.getMessage());
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleNoResourceFound(
+            NoResourceFoundException ex,
+            WebRequest request) {
+
         ApiErrorResponse errorResponse = new ApiErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
                 "Not Found",
-                ex.getMessage(),
-                request.getDescription(false).replace("uri=","")
+                "The requested resource was not found",
+                request.getDescription(false).replace("uri=", "")
         );
+
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
