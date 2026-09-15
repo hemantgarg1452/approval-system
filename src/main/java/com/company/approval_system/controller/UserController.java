@@ -1,11 +1,13 @@
 package com.company.approval_system.controller;
 
+import com.company.approval_system.dto.RegisterRequestDto;
 import com.company.approval_system.dto.UserResponse;
 import com.company.approval_system.security.UserPrincipal;
 import com.company.approval_system.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,9 +21,17 @@ import java.util.List;
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 @SecurityRequirement(name = "bearerAuth")
-@Tag(name = "Users", description = "User management operations")
+@Tag(name = "Users", description = "User management - Admin only for creation/deletion")
 public class UserController {
     private final UserService userService;
+
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "create user", description = "Create new user - Admin only")
+    public ResponseEntity<UserResponse> createUser(@Valid @RequestBody RegisterRequestDto request){
+        UserResponse response = userService.createUser(request);
+        return ResponseEntity.status(201).body(response);
+    }
 
     @GetMapping("/me")
     @Operation(summary = "Get current user", description = "Get details of the authenticated user")
@@ -56,7 +66,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Deactivate user", description = "Soft delete user (Admin only)")
+    @Operation(summary = "Deactivate user - Admin only")
     public ResponseEntity<Void>deactivateUser(@PathVariable Long id){
         userService.deactivateUser(id);
         return ResponseEntity.noContent().build();

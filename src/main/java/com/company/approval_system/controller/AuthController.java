@@ -19,10 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
-@Tag(name = "Authentication", description = "User authenticated and registration")
+@Tag(name = "Authentication", description = "Login only - user creation is admin-only via /api/v1/users")
 public class AuthController {
 
     private final AuthService authService;
+
     @PostMapping("/login")
     @Operation(summary = "User login",  description = "Authenticate user and receive JWT token")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequestDto request){
@@ -30,11 +31,10 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/register")
-    @Operation(summary = "Register new user", description = "Register new user (typically admin-only in production")
-    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequestDto request){
-        AuthResponse response = authService.register(request);
-        return ResponseEntity.status(201).body(response);
-    }
-
+//    @PostMapping("/register")
+//    @Operation(summary = "Register new user", description = "Register new user (typically admin-only in production")
+//    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequestDto request){
+//        AuthResponse response = authService.register(request);
+//        return ResponseEntity.status(201).body(response);
+//    }
 }
