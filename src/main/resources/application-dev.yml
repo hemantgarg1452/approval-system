@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/approval_system_dev?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+    url: ${DB_URL}
     username: ${DB_USERNAME:approval_user}
-    password: ${DB_PASSWORD}
+    password: ${DB_PASSWORD:approval_pass}
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       maximum-pool-size: 10
